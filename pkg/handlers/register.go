@@ -36,6 +36,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer database.Close()
+		// Should include double check for the user existence
 		DB, err := database.Prepare(`INSERT INTO users(email,username, password) values(?,?,?)`)
 		if err != nil {
 			Errors(w, http.StatusInternalServerError, fmt.Errorf("ERROR in preparing statement for DB"))
