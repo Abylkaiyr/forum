@@ -29,4 +29,5 @@ func StorageInit() {
 	newTable(db, utils.TableForUsers)
 	newTable(db, utils.TableForPosts)
 	newTable(db, utils.TableForComments)
+	newTable(db, utils.TableForSessions)
 }

@@ -28,18 +28,17 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			Errors(w, http.StatusInternalServerError, fmt.Errorf("ERROR in hasing user password"))
 			return
 		}
+
 		password := string(crpassword)
 		database, err := sql.Open("sqlite3", "./storage.db")
 		if err != nil {
 			Errors(w, http.StatusInternalServerError, fmt.Errorf("ERROR in opening DataBase"))
-			fmt.Println("2")
 			return
 		}
 		defer database.Close()
 		DB, err := database.Prepare(`INSERT INTO users(email,username, password) values(?,?,?)`)
 		if err != nil {
 			Errors(w, http.StatusInternalServerError, fmt.Errorf("ERROR in preparing statement for DB"))
-			fmt.Println("3")
 			return
 		}
 		rows, _ := database.Query("select * from users where email ='" + userEmail + "' or username ='" + userName + "'")
@@ -51,11 +50,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			rows.Scan(&id, &email, &name, &password2)
 		}
 		DB.Exec(userEmail, userName, password)
-
 		err = tpl.ExecuteTemplate(w, "register.html", nil)
 		if err != nil {
 			log.Fatalln(err)
 		}
 	}
-
 }

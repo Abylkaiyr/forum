@@ -24,4 +24,9 @@ const (
 		likes INTEGER DEFAULT 0,
 		dislikes INTEGER DEFAULT 0
 	);`
+	TableForSessions = `CREATE TABLE IF NOT EXISTS sessions (
+		id INTEGER PRIMARY KEY,		
+		owner TEXT,		
+		uuid TEXT
+	);`
 )
