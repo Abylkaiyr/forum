@@ -5,7 +5,9 @@ const (
 		id INTEGER PRIMARY KEY,
 		email TEXT UNIQUE,
 		username TEXT UNIQUE,
-		password TEXT
+		password TEXT,
+		sessionsID TEXT,
+		expireTime TEXT
 	);`
 	TableForPosts = `CREATE TABLE IF NOT EXISTS post (
 		id INTEGER PRIMARY KEY,

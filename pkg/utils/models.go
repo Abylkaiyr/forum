@@ -1,10 +1,14 @@
 package utils
 
+import "time"
+
 type User struct {
 	ID           int
 	UserName     string
 	UserEmail    string
 	UserPassword string
+	SessionID    string
+	ExpireTime   time.Time
 }
 
 type Post struct {

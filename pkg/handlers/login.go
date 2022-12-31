@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/Abylkaiyr/forum/pkg/delivery"
+	"github.com/Abylkaiyr/forum/pkg/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -32,19 +34,17 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		// if err != nil {
 		// 	fmt.Println("Could not find you from Database")
 		// }
-		var id int
-		var username2 string
-		var email2 string
-		var password2 string
+		user := &utils.User{}
+
 		for rows.Next() {
-			rows.Scan(&id, &email2, &username2, &password2)
+			rows.Scan(&user.ID, &user.UserEmail, &user.UserName, &user.UserPassword)
 		}
-		err = bcrypt.CompareHashAndPassword([]byte(password2), []byte(password))
-		if err != nil || username2 == "" { // Means user is not found from database
+		err = bcrypt.CompareHashAndPassword([]byte(user.UserPassword), []byte(password))
+		if err != nil || user.UserName == "" { // Means user is not found from database
 			w.WriteHeader(http.StatusUnauthorized)
 			tpl.ExecuteTemplate(w, "login.html", "Username or password incorrect")
 		}
-
-		fmt.Fprint(w, "Success")
+		fmt.Fprint(w, "Succeed")
+		delivery.SetSession(*user, w)
 	}
 }
