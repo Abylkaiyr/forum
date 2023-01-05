@@ -11,8 +11,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// var u *utils.User
-
 func SetSession(userID int, w http.ResponseWriter) {
 
 	database, err := sql.Open("sqlite3", "./storage.db")
@@ -32,29 +30,34 @@ func SetSession(userID int, w http.ResponseWriter) {
 
 	sessionID := ""
 	var expireTimeStr string
-	var expireTime time.Time
 
 	for rows.Next() {
 		rows.Scan(&sessionID, &expireTimeStr)
 	}
 
-	if checkSession(sessionID, expireTimeStr) {
+	expireTime, err := time.Parse(time.RFC3339Nano, expireTimeStr)
+	if err != nil {
+		fmt.Println("Error in parsing time value here2")
+	}
+
+	if checkSession(sessionID, expireTimeStr) || checkExpireSession(expireTime) {
 		// if session is empty we set new session and write it to db
 		sessionID = uuid.NewString()
-		expireTime = time.Now().Add(120 * time.Second)
+		expireTime := time.Now().Add(120 * time.Second)
 
 		http.SetCookie(w, &http.Cookie{
 			Name:    "COOKIE_NAME",
 			Value:   sessionID,
 			Expires: expireTime,
 		})
-		// expireTime, err := time.Parse(time.RFC3339Nano, expireTimeStr)
+		expireTimeStr = expireTime.Format(time.RFC3339Nano)
+		if err != nil {
+			fmt.Println("error in parsing time")
+		}
 
 		statement, _ := database.Prepare("INSERT INTO sessions (userID, uuid, expireTime) VALUES (?,?,?)")
-		statement.Exec(strconv.Itoa(userID), sessionID, expireTime.String())
-		fmt.Println("Reached here")
+		statement.Exec(strconv.Itoa(userID), sessionID, expireTimeStr)
 	}
-
 }
 
 func checkSession(sessionID string, expireTimeStr string) bool {
@@ -63,5 +66,13 @@ func checkSession(sessionID string, expireTimeStr string) bool {
 		checker = true
 	}
 
+	return checker
+}
+
+func checkExpireSession(expireTime time.Time) bool {
+	var checker = false
+	if expireTime.Before(time.Now()) {
+		checker = true
+	}
 	return checker
 }
