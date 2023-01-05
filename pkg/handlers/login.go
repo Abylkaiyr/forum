@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	_ "github.com/mattn/go-sqlite3"
+
 	"github.com/Abylkaiyr/forum/pkg/delivery"
 	"github.com/Abylkaiyr/forum/pkg/utils"
 	"golang.org/x/crypto/bcrypt"

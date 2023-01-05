@@ -20,6 +20,7 @@ func StorageInit() {
 		ErrorMsg(err)
 		return
 	}
+	defer DB.Close()
 
 	newTable(DB, utils.TableForUsers)
 	newTable(DB, utils.TableForPosts)
