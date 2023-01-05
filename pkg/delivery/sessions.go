@@ -35,12 +35,7 @@ func SetSession(userID int, w http.ResponseWriter) {
 		rows.Scan(&sessionID, &expireTimeStr)
 	}
 
-	expireTime, err := time.Parse(time.RFC3339Nano, expireTimeStr)
-	if err != nil {
-		fmt.Println("Error in parsing time value here2")
-	}
-
-	if checkSession(sessionID, expireTimeStr) || checkExpireSession(expireTime) {
+	if checkSession(sessionID, expireTimeStr) {
 		// if session is empty we set new session and write it to db
 		sessionID = uuid.NewString()
 		expireTime := time.Now().Add(120 * time.Second)
@@ -51,12 +46,27 @@ func SetSession(userID int, w http.ResponseWriter) {
 			Expires: expireTime,
 		})
 		expireTimeStr = expireTime.Format(time.RFC3339Nano)
-		if err != nil {
-			fmt.Println("error in parsing time")
-		}
 
 		statement, _ := database.Prepare("INSERT INTO sessions (userID, uuid, expireTime) VALUES (?,?,?)")
 		statement.Exec(strconv.Itoa(userID), sessionID, expireTimeStr)
+	}
+
+	expireTime, err := time.Parse(time.RFC3339Nano, expireTimeStr)
+	if err != nil {
+		fmt.Println("Error in parsing time value here2")
+	}
+	// if sessions is expired delete the previous session and add new one
+	if checkExpireSession(expireTime) {
+		sessionID = uuid.NewString()
+		expireTime = time.Now().Add(120 * time.Second)
+		expireTimeStr = expireTime.Format(time.RFC3339Nano)
+		statement, _ := database.Prepare("UPDATE sessions SET uuid = ?, expireTime = ? WHERE userID = ?")
+		statement.Exec(sessionID, expireTimeStr, strconv.Itoa(userID))
+		http.SetCookie(w, &http.Cookie{
+			Name:    "COOKIE_NAME",
+			Value:   sessionID,
+			Expires: expireTime,
+		})
 	}
 }
 
