@@ -42,6 +42,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			Errors(w, http.StatusInternalServerError, fmt.Errorf("ERROR in preparing statement for DB"))
 			return
 		}
+		// user tekseru
 		rows, _ := database.Query("select * from users where email ='" + userEmail + "' or username ='" + userName + "'")
 		var id int
 		var name string

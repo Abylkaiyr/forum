@@ -30,21 +30,23 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer database.Close()
-		rows, _ := database.Query("select * from users where username like '" + userName + "' ")
+		rows, _ := database.Query("select id, username, password from users where username like '" + userName + "' ")
 		// if err != nil {
 		// 	fmt.Println("Could not find you from Database")
 		// }
-		user := &utils.User{}
+		user := utils.User{}
 
 		for rows.Next() {
-			rows.Scan(&user.ID, &user.UserEmail, &user.UserName, &user.UserPassword)
+			rows.Scan(&user.ID, &user.UserName, &user.UserPassword)
 		}
 		err = bcrypt.CompareHashAndPassword([]byte(user.UserPassword), []byte(password))
 		if err != nil || user.UserName == "" { // Means user is not found from database
+			fmt.Println(err)
 			w.WriteHeader(http.StatusUnauthorized)
 			tpl.ExecuteTemplate(w, "login.html", "Username or password incorrect")
 		}
 		fmt.Fprint(w, "Succeed")
-		delivery.SetSession(*user, w)
+
+		delivery.SetSession(user.ID, w)
 	}
 }
