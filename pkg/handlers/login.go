@@ -47,8 +47,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusUnauthorized)
 			tpl.ExecuteTemplate(w, "login.html", "Username or password incorrect")
 		}
-		fmt.Fprint(w, "Succeed")
 
 		delivery.SetSession(user.ID, w)
+		http.Redirect(w, r, "/", http.StatusMovedPermanently)
 	}
 }

@@ -7,8 +7,6 @@ type User struct {
 	UserName     string
 	UserEmail    string
 	UserPassword string
-	SessionID    string
-	ExpireTime   time.Time
 }
 
 type Post struct {
@@ -28,4 +26,10 @@ type Comments struct {
 	CommentContent  string
 	CommentLikes    int
 	CommentDislikes int
+}
+
+type Sessions struct {
+	UserID     int
+	SessionID  string
+	ExpireTime time.Time
 }
