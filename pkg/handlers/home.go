@@ -19,9 +19,10 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c, err := r.Cookie("COOKIE_NAME")
+	c, err := r.Cookie("cookie")
 	if err != nil {
 		fmt.Println("Could not get cookie for user")
+		fmt.Println(err)
 	}
 
 	database, err := sql.Open("sqlite3", "./storage.db")
@@ -31,14 +32,15 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 	defer database.Close()
 	database.Ping()
-	rows, _ := database.Query("select * from sessions where uuid = '" + c.Value + "' ")
-	if err != nil {
-		fmt.Println("Could not find you from Database")
-	}
-	var session = &utils.Sessions{}
+	query := "select * from sessions where uuid = $1"
+	rows := database.QueryRow(query, c.Value)
 
-	for rows.Next() {
-		rows.Scan(session.UserID, session.SessionID, session.ExpireTime)
-	}
+	// if err != nil {
+	// 	fmt.Println("Could not find you from Database")
+	// }
+	var session = utils.Sessions{}
+
+	rows.Scan(&session.UserID, &session.SessionID, &session.ExpireTime)
+
 	fmt.Fprint(w, session.SessionID, session.ExpireTime)
 }

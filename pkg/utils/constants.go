@@ -28,6 +28,6 @@ const (
 	TableForSessions = `CREATE TABLE IF NOT EXISTS sessions (
 		userID INTEGER,		
 		uuid TEXT,
-		expireTime TEXT
+		expireTime DATETIME DEFAULT NULL
 	);`
 )
