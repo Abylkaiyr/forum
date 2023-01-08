@@ -10,7 +10,6 @@ import (
 )
 
 func MiddleWare(next http.HandlerFunc) http.HandlerFunc {
-	fmt.Println("here Middleware")
 	return func(w http.ResponseWriter, r *http.Request) {
 		c, err := r.Cookie("cookie")
 		if err == nil {
@@ -25,17 +24,18 @@ func MiddleWare(next http.HandlerFunc) http.HandlerFunc {
 			rows := database.QueryRow(query, c.Value)
 			var session = utils.Sessions{}
 			rows.Scan(&session.UserID, &session.SessionID, &session.ExpireTime)
-			if session.ExpireTime.After(time.Now()) {
-				next.ServeHTTP(w, r)
+			if time.Now().Before(session.ExpireTime) {
+				http.Redirect(w, r, "/", http.StatusMovedPermanently)
+				fmt.Println("You are logged in")
 			} else {
-				w.Write([]byte("Your session is expired"))
-				w.WriteHeader(http.StatusUnauthorized)
-				http.Redirect(w, r, "/login", http.StatusMovedPermanently)
+				next.ServeHTTP(w, r)
+				fmt.Println("Your session is expired")
 			}
 
 		} else {
 			// w.WriteHeader(http.StatusUnauthorized)
 			next.ServeHTTP(w, r)
+			fmt.Println("No cookie is found for user")
 		}
 	}
 }

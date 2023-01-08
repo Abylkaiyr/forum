@@ -14,13 +14,11 @@ import (
 func SetSession(userID int, w http.ResponseWriter) {
 
 	database, err := sql.Open("sqlite3", "./storage.db")
-
 	if err != nil {
 		fmt.Println("Here")
 	}
 
 	database.Ping()
-
 	rows, err := database.Query("select uuid, expireTime from sessions where userID =  '" + strconv.Itoa(userID) + "' ")
 
 	if err != nil {
@@ -35,21 +33,18 @@ func SetSession(userID int, w http.ResponseWriter) {
 		rows.Scan(&sessionID, &expireTime)
 	}
 
-	if checkSession(sessionID) {
-		// if session is empty we set new session and write it to db
-		sessionID = uuid.NewString()
+	sessionID = uuid.NewString()
 
-		expireTime := time.Now().Add(120 * time.Second)
+	expireTime = time.Now().Add(120 * time.Second)
 
-		http.SetCookie(w, &http.Cookie{
-			Name:    "cookie",
-			Value:   sessionID,
-			Expires: expireTime.Add(time.Hour * 3), // added 3 hours because in browser time is not settinng
-		})
+	http.SetCookie(w, &http.Cookie{
+		Name:    "cookie",
+		Value:   sessionID,
+		Expires: expireTime.Add(time.Hour * 3), // added 3 hours because in browser time is not settinng
+	})
 
-		statement, _ := database.Prepare("INSERT INTO sessions (userID, uuid, expireTime) VALUES (?,?,?)")
-		statement.Exec(strconv.Itoa(userID), sessionID, expireTime)
-	}
+	statement, _ := database.Prepare("INSERT INTO sessions (userID, uuid, expireTime) VALUES (?,?,?)")
+	statement.Exec(strconv.Itoa(userID), sessionID, expireTime)
 
 	// if sessions is expired delete the previous session and add new one
 	// if checkExpireSession(expireTime) {
@@ -67,11 +62,11 @@ func SetSession(userID int, w http.ResponseWriter) {
 	// }
 }
 
-func checkSession(sessionID string) bool {
-	checker := false
-	if sessionID == "" {
-		checker = true
-	}
+// func checkSession(sessionID string) bool {
+// 	checker := false
+// 	if sessionID == "" {
+// 		checker = true
+// 	}
 
-	return checker
-}
+// 	return checker
+// }
