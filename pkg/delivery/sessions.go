@@ -38,14 +38,14 @@ func SetSession(userID int, w http.ResponseWriter) {
 	if checkSession(sessionID) {
 		// if session is empty we set new session and write it to db
 		sessionID = uuid.NewString()
+
 		expireTime := time.Now().Add(120 * time.Second)
 
 		http.SetCookie(w, &http.Cookie{
 			Name:    "cookie",
 			Value:   sessionID,
-			Expires: expireTime,
+			Expires: expireTime.Add(time.Hour * 3), // added 3 hours because in browser time is not settinng
 		})
-		// expireTimeStr = expireTime.Format(time.RFC3339Nano)
 
 		statement, _ := database.Prepare("INSERT INTO sessions (userID, uuid, expireTime) VALUES (?,?,?)")
 		statement.Exec(strconv.Itoa(userID), sessionID, expireTime)

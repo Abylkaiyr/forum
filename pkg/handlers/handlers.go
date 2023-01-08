@@ -27,3 +27,7 @@ func Errors(w http.ResponseWriter, status int, err error) {
 	statusint := strconv.Itoa(status) + " " + http.StatusText(status)
 	tpl.ExecuteTemplate(w, "errors.html", statusint)
 }
+
+func Me(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Checked in middleware"))
+}
