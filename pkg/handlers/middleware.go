@@ -25,16 +25,17 @@ func MiddleWare(next http.HandlerFunc) http.HandlerFunc {
 			rows := database.QueryRow(query, c.Value)
 			var session = utils.Sessions{}
 			rows.Scan(&session.UserID, &session.SessionID, &session.ExpireTime)
-
-			if session.SessionID == "" || session.ExpireTime.After(time.Now()) {
+			if session.ExpireTime.After(time.Now()) {
+				next.ServeHTTP(w, r)
+			} else {
+				w.Write([]byte("Your session is expired"))
 				w.WriteHeader(http.StatusUnauthorized)
 				http.Redirect(w, r, "/login", http.StatusMovedPermanently)
-			} else {
-				next.ServeHTTP(w, r)
 			}
+
 		} else {
 			// w.WriteHeader(http.StatusUnauthorized)
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			next.ServeHTTP(w, r)
 		}
 	}
 }
