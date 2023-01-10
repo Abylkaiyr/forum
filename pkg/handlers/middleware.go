@@ -10,6 +10,7 @@ import (
 )
 
 func MiddleWare(next http.HandlerFunc) http.HandlerFunc {
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		c, err := r.Cookie("cookie")
 		if err == nil {
@@ -33,9 +34,9 @@ func MiddleWare(next http.HandlerFunc) http.HandlerFunc {
 			}
 
 		} else {
-			// w.WriteHeader(http.StatusUnauthorized)
-			next.ServeHTTP(w, r)
-			fmt.Println("No cookie is found for user")
+			if err == http.ErrNoCookie {
+				// if there is no cookie we have to set new cookie, to do so we need to send
+			}
 		}
 	}
 }

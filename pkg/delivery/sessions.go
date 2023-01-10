@@ -46,27 +46,20 @@ func SetSession(userID int, w http.ResponseWriter) {
 	statement, _ := database.Prepare("INSERT INTO sessions (userID, uuid, expireTime) VALUES (?,?,?)")
 	statement.Exec(strconv.Itoa(userID), sessionID, expireTime)
 
-	// if sessions is expired delete the previous session and add new one
-	// if checkExpireSession(expireTime) {
-	// 	sessionID = uuid.NewString()
-	// 	expireTime = time.Now().Add(120 * time.Second)
-	// 	// expireTimeStr = expireTime.Format(time.RFC3339Nano)
-	// 	expireTimeStr = expireTime.String()
-	// 	statement, _ := database.Prepare("UPDATE sessions SET uuid = ?, expireTime = ? WHERE userID = ?")
-	// 	statement.Exec(sessionID, expireTimeStr, strconv.Itoa(userID))
-	// 	http.SetCookie(w, &http.Cookie{
-	// 		Name:    "COOKIE_NAME",
-	// 		Value:   sessionID,
-	// 		Expires: expireTime,
-	// 	})
-	// }
 }
 
-// func checkSession(sessionID string) bool {
-// 	checker := false
-// 	if sessionID == "" {
-// 		checker = true
-// 	}
+func DeleteSession(w http.ResponseWriter) {
+	// Delete session for the user from db
+	database, err := sql.Open("sqlite3", "./storage.db")
+	if err != nil {
+		fmt.Println("Here")
+	}
 
-// 	return checker
-// }
+	database.Ping()
+	statement, err := database.Prepare("DROP TABLE IF EXISTS sessions")
+	if err != nil {
+		fmt.Println("Could not drop table")
+	}
+	statement.Exec()
+	fmt.Println("Dropped table")
+}
