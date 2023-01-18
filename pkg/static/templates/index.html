@@ -9,8 +9,22 @@
 </head>
 <body>
     <div class="header">
-        {{template "header"}}
+       
+        {{if .User}}
+        <a href="/login"><button  class="btn">Login</button></a>
+        <a href="/register"><button  class="btn">Register</button></a>
+         <a href="/logout"><button  class="btn">Logout</button></a>
+         <a href="/post"><button  class="btn">Create a post</button></a>
+       
+        {{else}}
+        <a href="/login"><button  class="btn">Login</button></a>     
+        <a href="/register"><button  class="btn">Register</button></a>  
+        {{end}}    
+        
+    </div>   
+    
+    <div class="posts">
+        
     </div>
-            
 </body>
 </html>
