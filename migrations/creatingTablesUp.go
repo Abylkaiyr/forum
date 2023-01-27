@@ -32,4 +32,12 @@ const (
 		expireTime DATETIME DEFAULT NULL,
 		status INTEGER
 	);`
+
+	// TableForSessions = `CREATE TABLE IF NOT EXISTS sessions (
+	// 	id INTEGER PRIMARY KEY,
+	// 	owner TEXT,
+	// 	uuid TEXT,
+	// 	expireTime DATETIME DEFAULT NULL,
+	// 	status INTEGER
+	// );`
 )
