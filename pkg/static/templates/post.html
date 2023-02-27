@@ -34,7 +34,7 @@
           </nav>
           <hr>
 <h2>Add Post </h2>
-<form action="/createpost" method="post">
+<form action="/createpost" method="post" enctype="multipart/form-data">
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Title</label>
     <div class="col-sm-10">
@@ -64,13 +64,14 @@
   </div>
   <br>
   <fieldset class="form-group">
-    <!-- <div class="form-group row">
+    <div class="form-group row">
         <label class="col-sm-2 col-form-label">Image</label>
         <div class="col-sm-10">
-          <input name="newimage" type="text" class="form-control" placeholder="url to image">
+          <input type="file" name="image" accept="image/*">
         </div>
-      </div> -->
+      </div>
   </fieldset>
+  {{.}}
   <br>
   <hr>
   <div class="form-group row ">
@@ -82,8 +83,6 @@
 </div>
 </div>
 </div>
-<button type="button" class="btn btn-danger btn-floating btn-lg" id="btn-back-to-top">
-  <i class="fas fa-arrow-up"></i>
-</button>
+
 </body>
 </html>

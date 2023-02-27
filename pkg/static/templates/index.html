@@ -1,30 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="/pkg/static/styles/header.css">
-</head>
-<body>
-    <div class="header">
-       
-        {{if .User}}
-        <a href="/login"><button  class="btn">Login</button></a>
-        <a href="/register"><button  class="btn">Register</button></a>
-         <a href="/logout"><button  class="btn">Logout</button></a>
-         <a href="/post"><button  class="btn">Create a post</button></a>
-       
-        {{else}}
-        <a href="/login"><button  class="btn">Login</button></a>     
-        <a href="/register"><button  class="btn">Register</button></a>  
-        {{end}}    
-        
-    </div>   
-    
-    <div class="posts">
-        
+    <link rel="stylesheet" href="/pkg/static/styles/index.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Playfair+Display+SC:ital@1&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="header-1">
+      <div class="left">
+        <h2 class="forumText">FORUM</h2>
+      </div>
+      <div class="right">{{ template "header" . }}</div>
     </div>
-</body>
+
+    <div class="categorize">
+      <form action="/filter" method="get">
+        <button class="btn" type="submit" name="category" value="business">
+          business
+        </button>
+        <button class="btn" type="submit" name="category" value="sports">
+          sports
+        </button>
+        <button class="btn" type="submit" name="category" value="health">
+          health
+        </button>
+        <button class="btn" type="submit" name="category" value="science">
+          science
+        </button>
+        <button class="btn" type="submit" name="category" value="entertainment">
+          entertainment
+        </button>
+        <button class="btn" type="submit" name="category" value="technology">
+          technology
+        </button>
+        <button class="btn" type="submit" name="category" value="all">
+          All Posts
+        </button>
+      </form>
+    </div>
+    <h2 class="postTag">Posts</h2>
+    <div class="body">
+      {{$user := .User}} {{if .Posts}} {{range .Posts}}
+      <div class="container">
+        <div class="card">
+          <div class="card-front">
+            
+              <div class="card-header">
+                <img src="{{.FilePath}}" alt="uploaded image" />
+                <!-- stopped here can not open saved image                     -->
+              </div>
+              <div class="card-body">
+                {{if .Type}} {{range .Type}}
+                <span class="tag tag-teal">{{.}}</span>
+                {{end}}{{end}}
+                <h4>{{.Title}}</h4>
+
+                <div class="user">
+                  <img
+                    src="/pkg/static/files/black-male-user-symbol_318-60703.avif"
+                    alt="user"
+                  />
+                  <div class="user-info">
+                    <h5>{{.Owner}}</h5>
+                    <small>{{.Timer}}</small>
+                  </div>
+                
+                </div>
+                <div class="reactions">
+                  <div class="likes">
+                    <form action="/post-like/{{.ID}}" method="POST">
+                      <button {{if not $user}} disabled {{end}}>
+                        <img src="/pkg/static/files/like.png" alt="like" />
+                      </button>
+                      <span>{{.Likes}}</span>
+                    </form>
+                  </div>
+                  <div class="dislikes">
+                    <form action="/post-dislike/{{.ID}}" method="POST">
+                      <button {{if not $user}} disabled {{end}} >
+                        <img
+                          src="/pkg/static/files/dislike.png"
+                          alt="dislike"
+                        />
+                      </button>
+                      <span>{{.Dislikes}}</span>
+                    </form>
+                  </div>
+                </div>
+                <form action="/post-info/{{.ID}}" method="post">
+                <button class="btn">
+                  View post
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {{end}} {{end}}
+    </div>
+  </body>
 </html>

@@ -16,6 +16,7 @@ func (s *Store) CreateTables() error {
 	createTable(s.db, migrations.TableForPosts)
 	createTable(s.db, migrations.TableForComments)
 	createTable(s.db, migrations.TableForSessions)
+	createTable(s.db, migrations.TableForPostReactions)
 	return nil
 }
 

@@ -1,15 +1,9 @@
-{{define "header"}}
- 
-   <div class="logo-section">
-      <p>Abylkaiyr Omar</p>
-   </div>
-   <div class="title-section">
-      <p>Pet-Project-Forum</p>
-   </div>
-   <div class="login-section">
-      <a href="/login"><button  class="btn">Login</button></a>
-      <a href="/register"><button  class="btn">Register</button></a>
-       <a href="/logout"><button  class="btn">Logout</button></a>
-   </div>
- 
-{{end}}
+{{define "header"}} {{if .User}}
+<p>Hello, {{.User}}</p>
+<a href="/logout"><button class="btn">Logout</button></a>
+<a href="/post"><button class="btn">Create a post</button></a>
+
+{{else}}
+<a href="/login"><button class="btn">Login</button></a>
+<a href="/register"><button class="btn">Register</button></a>
+{{end}} {{end}}
