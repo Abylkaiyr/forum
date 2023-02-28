@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/pkg/static/styles/index.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/pkg/static/styles/index.css" />
+    <link rel="stylesheet" href="/pkg/static/styles/postInfo.css" />
     <title>post-info</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header-1">
-        <div class="left">
-          <h2 class="forumText">FORUM</h2>
-        </div>
-        <div class="right">{{ template "header" . }}</div>
+      <div class="left">
+        <h2 class="forumText">FORUM</h2>
+      </div>
+      <div class="right">{{ template "header" . }}</div>
+    </div>
+
+    <div class="post-body">
+      <div class="post-info">
+        <article class="card">
+          <div class="temporary_text">{{.Post.Title}}<</div>
+          <div class="card_content">
+            <span class="card_title"
+              ><h2>{{range .Post.Type}} {{.}} {{end}}</h2></span
+            >
+            <span class="card_subtitle">Post Content</span>
+            <p class="card_description">{{.Post.Content}}</p>
+          </div>
+        </article>
       </div>
 
-      <div class="post">
-        <h2>{{.Post.Title}}</h2>
-        <h2>{{.Post.Content}}</h2>
-        <h2>{{.Post.Type}}</h2>
+      <div class="comment">
+        COMMENT SECTION
       </div>
-</body>
+
+    </div>
+   
+  </post-body>
 </html>

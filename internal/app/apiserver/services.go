@@ -100,10 +100,9 @@ func (c *APIServer) ProcessPostLikes(post *model.Post1, user model.User) {
 				c.logger.ErrLog.Fatalf("error in updating reactions for reactions table, %s", err)
 				return
 			}
-			fmt.Println("Updated because of user like not found in reaction")
+
 		} else {
 			arr := strings.Split(reactions.LikeState, ",")
-			fmt.Printf("reactions Likestate ta username bar ma ?, %t", strings.Contains(reactions.LikeState, user.Username))
 			if strings.Contains(reactions.LikeState, user.Username) {
 				reactions.TotalLikes--
 				stateArr := removeStringElement(arr, user.Username)
@@ -118,7 +117,6 @@ func (c *APIServer) ProcessPostLikes(post *model.Post1, user model.User) {
 					c.logger.ErrLog.Fatalf("error in updating reactions Like State for reactions table, %s", err)
 					return
 				}
-				fmt.Println("User found in map like is minused")
 			} else {
 				reactions.TotalLikes++
 				arr = append(arr, user.Username)
@@ -128,7 +126,6 @@ func (c *APIServer) ProcessPostLikes(post *model.Post1, user model.User) {
 					c.logger.ErrLog.Fatalf("error in updating reactions Like State for reactions table, %s", err)
 					return
 				}
-				fmt.Println("User not found in map and thats why added to map")
 
 			}
 
@@ -173,10 +170,9 @@ func (c *APIServer) ProcessPostDisLikes(post *model.Post1, user model.User) {
 				c.logger.ErrLog.Fatalf("error in updating reactions for reactions table, %s", err)
 				return
 			}
-			fmt.Println("Updated because of user like not found in reaction")
+
 		} else {
 			arr := strings.Split(reactions.DisLikeState, ",")
-			fmt.Printf("reactions Likestate ta username bar ma ?, %t", strings.Contains(reactions.DisLikeState, user.Username))
 			if strings.Contains(reactions.DisLikeState, user.Username) {
 				reactions.TotalDislikes--
 				stateArr := removeStringElement(arr, user.Username)
@@ -191,7 +187,6 @@ func (c *APIServer) ProcessPostDisLikes(post *model.Post1, user model.User) {
 					c.logger.ErrLog.Fatalf("error in updating reactions Like State for reactions table, %s", err)
 					return
 				}
-				fmt.Println("User found in map like is minused")
 			} else {
 				reactions.TotalDislikes++
 				arr = append(arr, user.Username)
@@ -201,7 +196,6 @@ func (c *APIServer) ProcessPostDisLikes(post *model.Post1, user model.User) {
 					c.logger.ErrLog.Fatalf("error in updating reactions Like State for reactions table, %s", err)
 					return
 				}
-				fmt.Println("User not found in map and thats why added to map")
 
 			}
 
