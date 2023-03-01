@@ -1,0 +1,13 @@
+{{define "comments"}}
+<!-- container -->
+<div class="container">
+  <h2>Leave Us a Comment</h2>
+  <form action="/post-info/{{.Post.ID}}" method="POST">
+    <textarea placeholder="Add Your Comment" name="comment"></textarea>
+    <div class="btnInfo">
+      <input type="submit" value="Comment" />
+      <button id="clear">Cancel</button>
+    </div>
+  </form>
+</div>
+{{end}}

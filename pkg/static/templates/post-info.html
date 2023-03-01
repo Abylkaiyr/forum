@@ -9,6 +9,7 @@
     <title>post-info</title>
   </head>
   <body>
+    {{$user := .User}}
     <div class="header-1">
       <div class="left">
         <h2 class="forumText">FORUM</h2>
@@ -18,23 +19,20 @@
 
     <div class="post-body">
       <div class="post-info">
-        <article class="card">
-          <div class="temporary_text">{{.Post.Title}}<</div>
-          <div class="card_content">
-            <span class="card_title"
-              ><h2>{{range .Post.Type}} {{.}} {{end}}</h2></span
-            >
-            <span class="card_subtitle">Post Content</span>
-            <p class="card_description">{{.Post.Content}}</p>
-          </div>
-        </article>
+        <div class="title">{{.Post.Title}}</div>
+        <div class="type">{{range .Post.Type}} {{.}} {{end}}</div>
+        <div class="content">{{.Post.Content}}</div>
       </div>
-
-      <div class="comment">
-        COMMENT SECTION
+      <div class="comments-box">
+        {{range .Comments}}
+        <h2>{{.Owner}}</h2>
+        {{.Content}} {{end}}
       </div>
+      <div class="comment">{{if $user}} {{template "comments" .}} {{end}}</div>
 
+      
     </div>
-   
-  </post-body>
+  </body>
+
+  <script src="/pkg/static/files/plugin.js"></script>
 </html>

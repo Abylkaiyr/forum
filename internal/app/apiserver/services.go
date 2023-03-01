@@ -254,3 +254,30 @@ func (c *APIServer) checkUserLikehas(reactions *model.Reactions, user model.User
 		}
 	}
 }
+
+// Comments
+
+func (c *APIServer) ProcessComments(user *model.User, post model.Post1, comment string) ([]model.Comments, error) {
+
+	// if there is no comments, we should create a comment
+	if len(comment) != 0 && len(user.Username) != 0 {
+		cn := &model.Comments{}
+		cn.Content = comment
+		cn.PostID = post.ID
+		cn.Owner = user.Username
+		cn.Likes = 0
+		cn.Dislikes = 0
+		cn.LikeState = ""
+		cn.DislikeState = ""
+		if err := c.store.User().CreateComment(post, cn); err != nil {
+			c.logger.ErrLog.Printf("db error: %s", err)
+			return nil, err
+		}
+	}
+	comments, err := c.store.User().GetAllComments(post)
+	if err != nil {
+		c.logger.ErrLog.Printf("error is happened: %s", err)
+		return nil, err
+	}
+	return comments, nil
+}

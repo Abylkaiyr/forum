@@ -22,9 +22,10 @@ func (c *APIServer) PostInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	type Data struct {
-		User    string
-		Post    model.Post1
-		UserDat model.User
+		User     string
+		Post     model.Post1
+		UserDat  *model.User
+		Comments []model.Comments
 	}
 	p := Data{}
 	p.Post = post
@@ -34,9 +35,17 @@ func (c *APIServer) PostInfo(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Could not get user_id from sessions")
 		return
 	}
+	// Dealing with comments
+	comment := r.FormValue("comment")
 
 	if userID == 0 {
+		cmnts, err := c.store.User().GetAllComments(post)
+		if err != nil {
+			fmt.Println(err)
+		}
+		p.Comments = cmnts
 		tpl.ExecuteTemplate(w, "post-info.html", p)
+
 	} else {
 		user, err := c.store.User().FindUserByUserID(userID)
 		if err != nil {
@@ -46,11 +55,17 @@ func (c *APIServer) PostInfo(w http.ResponseWriter, r *http.Request) {
 
 		p.User = user.Username
 
-		p.UserDat = *user
+		p.UserDat = user
 		if err != nil {
 			c.logger.ErrLog.Printf("Could not find user from the users table %s", err)
 			return
 		}
+		cmnts, err := c.ProcessComments(p.UserDat, post, comment)
+		if err != nil {
+			c.logger.ErrLog.Printf("error: %s", err)
+			return
+		}
+		p.Comments = cmnts
 		tpl.ExecuteTemplate(w, "post-info.html", p)
 	}
 

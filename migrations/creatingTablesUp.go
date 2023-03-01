@@ -27,7 +27,9 @@ const (
 		owner TEXT,
 		content TEXT,
 		likes INTEGER DEFAULT 0,
-		dislikes INTEGER DEFAULT 0
+		dislikes INTEGER DEFAULT 0,
+		likeState TEXT DEFAULT "" NOT NULL,
+		dislikeState TEXT DEFAULT "" NOT NULL
 	);`
 	TableForSessions = `CREATE TABLE IF NOT EXISTS sessions (		
 		id INTEGER PRIMARY KEY,
